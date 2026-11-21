@@ -1,0 +1,58 @@
+#include <stdio.h>
+#include <string.h>
+
+typedef struct {
+    char city[20];
+    int pincode;
+} Address;
+
+typedef struct {
+    int id;
+    float weight;
+    Address to;
+    struct { int day, month, year; } booked;
+} Parcel;
+
+void sort_by_weight(Parcel p[], int n)
+{
+    int i, j, min;
+    Parcel temp;
+
+    for (i = 0; i < n - 1; i++) {
+        min = i;
+        for (j = i + 1; j < n; j++) {
+            if (p[j].weight < p[min].weight)
+                min = j;
+        }
+        if (min != i) {
+            temp = p[i];
+            p[i] = p[min];
+            p[min] = temp;
+        }
+    }
+}
+
+void print_parcel(Parcel *p)
+{
+    printf("ID: %d | Weight: %.1f kg | City: %s | PIN: %d | Date: %02d-%02d-%04d\n",
+           p->id, p->weight, p->to.city, p->to.pincode,
+           p->booked.day, p->booked.month, p->booked.year);
+}
+
+int main(void)
+{
+    Parcel list[3] = {
+        {501, 4.5f, {"Madurai", 625001}, {12, 10, 2026}},
+        {502, 1.2f, {"Chennai", 600077}, {12, 10, 2026}},
+        {503, 2.8f, {"Coimbatore", 641001}, {13, 10, 2026}}
+    };
+
+    sort_by_weight(list, 3);
+    printf("Parcels sorted by weight (lightest first):\n");
+    for (int i = 0; i < 3; i++)
+        print_parcel(&list[i]);
+
+    return 0;
+}
+
+
